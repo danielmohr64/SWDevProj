@@ -1,0 +1,83 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome!</h1>
+
+    <form id="form">
+        <div class="row">
+            <div class="col-12 col-md-10">
+                <input id="url" type="url" class="form-control" placeholder="Enter URL to be shortened" required />
+            </div>
+            <div class="col-4 col-md-2">
+                <button type="button" class="btn btn-primary w-100" id="shorten">Shorten!</button>
+            </div>
+        </div>
+        <div class="row">
+
+        </div>
+        <div id="result" class="row hidden">
+            <div class="col-12 col-md-10">
+                <input id="short-url" type="text" class="form-control" readonly />
+            </div>
+            <div class="col-4 col-md-2">
+                <button type="button" class="btn btn-success w-100" id="clipboard">Clipboard</button>
+            </div>
+        </div>
+    </form>
+
+    @section Css{
+        <style>
+            .row{
+                margin-top:1em;
+            }
+        </style>
+     }
+
+    @section scripts{
+        <script>
+            function shortenUrl() {
+                $('#result').addClass('hidden');
+
+                if ($('#form')[0].reportValidity()) {
+                    fetch('/api/shortenurl', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify($('#url').val())
+                    })
+                    .then((response) => {
+                        return response.text();
+                    })
+                    .then((result) => {
+                        $('#short-url').val(result);
+                        $('#result').removeClass('hidden');
+                    });
+                }
+            }
+
+            $('#url').keydown(function (event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    shortenUrl();
+                    return false;
+                }
+            });
+
+            $('#shorten').click(() => {
+                shortenUrl();
+            });
+            $('#clipboard').click(() => {
+                /* Get the text field */
+                var copyText = $("#short-url").val();
+
+                /* Copy the text inside the text field */
+                navigator.clipboard.writeText(copyText);
+            });
+        </script>
+    }
+</div>

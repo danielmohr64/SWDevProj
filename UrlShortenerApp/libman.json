@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "cdnjs",
+      "library": "fetch@3.0.0",
+      "destination": "wwwroot/lib/fetch/"
+    }
+  ]
+}
